@@ -13,10 +13,11 @@ async function createMaintenance(formData: FormData) {
   const propertyId = formData.get('propertyId') as string;
   const description = formData.get('description') as string;
   const priority = formData.get('priority') as string;
+  const category = formData.get('category') as string;
   const status = formData.get('status') as string;
 
   await prisma.maintenanceRequest.create({
-    data: { propertyId, description, priority, status, createdDate: new Date() },
+    data: { propertyId, description, priority, category: category || 'other', status, createdDate: new Date() },
   });
 
   redirect('/maintenance');
@@ -60,14 +61,27 @@ export default async function NewMaintenancePage() {
               </select>
             </div>
             <div>
-              <label htmlFor="status" className="label">Status *</label>
-              <select id="status" name="status" required className="input">
-                <option value="open">Open</option>
-                <option value="in-progress">In Progress</option>
-                <option value="completed">Completed</option>
-                <option value="cancelled">Cancelled</option>
+              <label htmlFor="category" className="label">Category *</label>
+              <select id="category" name="category" required className="input">
+                <option value="plumbing">Plumbing</option>
+                <option value="electrical">Electrical</option>
+                <option value="hvac">HVAC/Heating</option>
+                <option value="appliance">Appliance</option>
+                <option value="structural">Structural</option>
+                <option value="pest">Pest Control</option>
+                <option value="other">Other</option>
               </select>
             </div>
+          </div>
+
+          <div>
+            <label htmlFor="status" className="label">Status *</label>
+            <select id="status" name="status" required className="input">
+              <option value="open">Open</option>
+              <option value="in-progress">In Progress</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
           </div>
 
           <div className="flex gap-4 pt-4">

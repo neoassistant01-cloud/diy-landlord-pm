@@ -29,6 +29,7 @@ export async function PUT(
         tenantId: body.tenantId,
         amount: Number(body.amount),
         date: new Date(body.date),
+        dueDate: body.dueDate ? new Date(body.dueDate) : null,
         method: body.method,
         status: body.status,
       },

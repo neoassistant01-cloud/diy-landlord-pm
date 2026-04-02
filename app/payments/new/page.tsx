@@ -16,11 +16,19 @@ async function createPayment(formData: FormData) {
   const tenantId = formData.get('tenantId') as string;
   const amount = Number(formData.get('amount'));
   const date = formData.get('date') as string;
+  const dueDate = formData.get('dueDate') as string;
   const method = formData.get('method') as string;
   const status = formData.get('status') as string;
 
   await prisma.payment.create({
-    data: { tenantId, amount, date: new Date(date), method, status },
+    data: { 
+      tenantId, 
+      amount, 
+      date: new Date(date), 
+      dueDate: new Date(dueDate), 
+      method, 
+      status 
+    },
   });
 
   redirect('/payments');
@@ -28,6 +36,10 @@ async function createPayment(formData: FormData) {
 
 export default async function NewPaymentPage() {
   const tenants = await getTenants();
+
+  // Default due date: 5th of next month
+  const today = new Date();
+  const defaultDueDate = new Date(today.getFullYear(), today.getMonth() + 1, 5);
 
   return (
     <div>
@@ -57,6 +69,19 @@ export default async function NewPaymentPage() {
               <label htmlFor="date" className="label">Date *</label>
               <input type="date" id="date" name="date" required className="input" />
             </div>
+          </div>
+
+          <div>
+            <label htmlFor="dueDate" className="label">Due Date *</label>
+            <input 
+              type="date" 
+              id="dueDate" 
+              name="dueDate" 
+              required 
+              defaultValue={defaultDueDate.toISOString().split('T')[0]} 
+              className="input" 
+            />
+            <p className="text-xs text-gray-500 mt-1">Rent is due on this date</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

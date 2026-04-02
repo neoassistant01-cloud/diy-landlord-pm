@@ -20,12 +20,20 @@ async function updatePayment(id: string, formData: FormData) {
   const tenantId = formData.get('tenantId') as string;
   const amount = Number(formData.get('amount'));
   const date = formData.get('date') as string;
+  const dueDate = formData.get('dueDate') as string;
   const method = formData.get('method') as string;
   const status = formData.get('status') as string;
 
   await prisma.payment.update({
     where: { id },
-    data: { tenantId, amount, date: new Date(date), method, status },
+    data: { 
+      tenantId, 
+      amount, 
+      date: new Date(date), 
+      dueDate: new Date(dueDate), 
+      method, 
+      status 
+    },
   });
 
   redirect('/payments');
@@ -74,6 +82,19 @@ export default async function EditPaymentPage({ params }: { params: Promise<{ id
               <label htmlFor="date" className="label">Date *</label>
               <input type="date" id="date" name="date" required defaultValue={new Date(payment.date).toISOString().split('T')[0]} className="input" />
             </div>
+          </div>
+
+          <div>
+            <label htmlFor="dueDate" className="label">Due Date *</label>
+            <input 
+              type="date" 
+              id="dueDate" 
+              name="dueDate" 
+              required 
+              defaultValue={payment.dueDate ? new Date(payment.dueDate).toISOString().split('T')[0] : ''} 
+              className="input" 
+            />
+            <p className="text-xs text-gray-500 mt-1">Rent is due on this date</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

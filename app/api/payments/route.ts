@@ -3,7 +3,7 @@ import prisma from '@/lib/prisma';
 
 export async function GET() {
   const payments = await prisma.payment.findMany({
-    orderBy: { date: 'desc' },
+    orderBy: { dueDate: 'desc' },
     include: { tenant: { include: { property: true } } },
   });
   return NextResponse.json(payments);
@@ -17,6 +17,7 @@ export async function POST(request: Request) {
         tenantId: body.tenantId,
         amount: Number(body.amount),
         date: new Date(body.date),
+        dueDate: body.dueDate ? new Date(body.dueDate) : null,
         method: body.method,
         status: body.status,
       },

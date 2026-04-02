@@ -17,6 +17,7 @@ export async function POST(request: Request) {
         propertyId: body.propertyId,
         description: body.description,
         priority: body.priority,
+        category: body.category || 'other',
         status: body.status,
         createdDate: new Date(body.createdDate || new Date()),
       },
